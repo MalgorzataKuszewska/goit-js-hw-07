@@ -25,21 +25,24 @@ function createGalleryItem(item) {
 }
 
 function openModal(src, alt) {
-  const instance = basicLightbox.create(`
-    <img src="${src}" alt="${alt}" width="800" height="600">
-`);
+  const content = `<img src="${src}" alt="${alt}" width="800" height="600">`;
+
+  instance = basicLightbox.create(content, {
+    onClose: () => {
+      instance = null;
+      window.removeEventListener("keydown", closeModalOnEscape);
+    },
+    onShow: () => {
+      window.addEventListener("keydown", closeModalOnEscape);
+    },
+  });
 
   instance.show();
-
-  window.addEventListener("keydown", (event) =>
-    closeModalOnEscape(event, instance)
-  );
 }
 
-function closeModalOnEscape(event, instance) {
+function closeModalOnEscape(event) {
   if (event.key === "Escape" && instance) {
     instance.close();
-    window.removeEventListener("keydown", closeModalOnEscape);
   }
 }
 
