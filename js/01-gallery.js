@@ -1,13 +1,11 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-import * as basicLightbox from "basiclightbox";
-import "basiclightbox/dist/basicLightbox.min.css";
-
 const galleryList = document.querySelector(".gallery");
+let instance;
 
 function createGalleryItem(item) {
-  const galleryItem = document.createElement("div");
+  const galleryItem = document.createElement("li");
   galleryItem.classList.add("gallery__item");
 
   const galleryLink = document.createElement("a");
@@ -32,6 +30,17 @@ function openModal(src, alt) {
 `);
 
   instance.show();
+
+  window.addEventListener("keydown", (event) =>
+    closeModalOnEscape(event, instance)
+  );
+}
+
+function closeModalOnEscape(event, instance) {
+  if (event.key === "Escape" && instance) {
+    instance.close();
+    window.removeEventListener("keydown", closeModalOnEscape);
+  }
 }
 
 galleryItems.forEach((item) => {
